@@ -29,6 +29,8 @@ Foo = DS.Model.extend( StainedByChildrenMixin, {
   baz:  DS.belongsTo ( 'baz'                  )
   quux: DS.belongsTo ( 'quux', {stains: true} )
 });
+
+export default Foo;
 ```
 
 In the above example, a `foo` will be marked dirty, whenever its `quux` or any of its `bars` become dirty. The `baz` will not affect `foo`'s dirtiness because the respective relationship is not flagged with `stains: true`.
