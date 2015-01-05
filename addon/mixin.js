@@ -2,16 +2,46 @@ import Ember from 'ember';
 
 export default Ember.Mixin.create({
 
+  isDirty: Ember.computed('areChildrenDirty', 'currentState.isDirty', function() {
+    return this.get('currentState.isDirty') || this.get('areChildrenDirty');
+  }),
+
+
+  // This gets overridden from `this._defineAreChildrenDirty()`
+  areChildrenDirty: null,
+
+
   init: function() {
     this._super();
-    this.defineAreChildrenDirty();
+
+    // Setting the `areChildrenDirty` property dynamically.
+    // This is required in order to bind it to all relationships.
+    this._defineAreChildrenDirty();
   },
 
 
-  relationshipNames: function() {
+  _defineAreChildrenDirty: function() {
+    var
+      relationshipNames = this._relationshipNames(),
+      dirtyChildrenPropertyNames = this._dirtyChildrenPropertyNames(relationshipNames),
+      computedProperty;
+
+    Ember.defineProperty(
+      this, 'areChildrenDirty', (
+        computedProperty = Ember.computed(
+          function() {
+            return this._areChildrenDirty(relationshipNames);
+          }
+        )
+      ).property.apply(computedProperty, dirtyChildrenPropertyNames)
+    );
+  },
+
+
+  _relationshipNames: function() {
     var relationshipNames = [];
     this.eachRelationship(function(relationshipName, relationship) {
-      if (relationship.kind === 'hasMany') {
+      if (relationship.options.stains) {
         relationshipNames.push(relationshipName);
       }
     });
@@ -19,9 +49,9 @@ export default Ember.Mixin.create({
   },
 
 
-  dirtyChildrenPropertyNames: function(names) {
+  _dirtyChildrenPropertyNames: function(names) {
     if (names == null)
-      names = this.relationshipNames();
+      names = this._relationshipNames();
 
     return names.map(function(name) {
       return "" + name + ".@each.isDirty";
@@ -29,24 +59,8 @@ export default Ember.Mixin.create({
   },
 
 
-  defineAreChildrenDirty: function() {
-    var
-      hasManyRelationshipNames = this.hasManyRelationshipNames(),
-      dirtyChildrenPropertyNames = this.dirtyChildrenPropertyNames(hasManyRelationshipNames),
-      thisOfProperty;
-
-    Ember.defineProperty(this, 'areChildrenDirty', (
-      thisOfProperty = Ember.computed(
-        function() {
-          return this._areChildrenDirty(hasManyRelationshipNames);
-        }
-      )
-    ).property.apply(thisOfProperty, dirtyChildrenPropertyNames));
-  },
-
-
-  _areChildrenDirty: function(hasManyRelationshipNames) {
-    return hasManyRelationshipNames.map(
+  _areChildrenDirty: function(relationshipNames) {
+    return relationshipNames.map(
       function(relationshipName) {
         return this._isChildDirty(relationshipName);
       }.bind(this)
@@ -60,10 +74,5 @@ export default Ember.Mixin.create({
     return this.get(childName).any(function(item) {
       return item.get('isDirty');
     });
-  },
-
-
-  isDirty: Ember.computed('areChildrenDirty', 'currentState.isDirty', function() {
-    return this.get('currentState.isDirty') || this.get('areChildrenDirty');
-  })
+  }
 });

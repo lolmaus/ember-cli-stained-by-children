@@ -1,0 +1,13 @@
+{{outlet}}
+
+<p>{{model}}</p>
+<p>isDirty: {{model.isDirty}}</p>
+<ul>
+  {{#each bar in model.bars}}
+    <li>
+      <p>{{bar}}</p>
+      <p>{{bar.isDirty}}</p>
+      <p>{{input type="checkbox" checked=bar.baz}}</p>
+    </li>
+  {{/each}}
+</ul>
