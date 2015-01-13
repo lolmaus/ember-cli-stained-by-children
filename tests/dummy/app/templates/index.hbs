@@ -1,20 +1,26 @@
 {{outlet}}
 
 <p>{{model}}</p>
-<p>isDirty: {{model.isDirty}}</p>
-<p>areChildrenDirty: {{model.areChildrenDirty}}</p>
-<p>{{input type="checkbox" checked=model.val}}</p>
-<ul>
+<p>isDirty: {{isDirty}}</p>
+<p>areChildrenDirty: {{areChildrenDirty}}</p>
+<p>{{input type="checkbox" checked=val}}</p>
+
+{{#if bars.length}}
   <h2>Bars:</h2>
-  {{#each bar in model.bars}}
-    <li>
-      <p>{{bar}}</p>
-      <p>isDirty: {{bar.isDirty}}</p>
-      <p>{{input type="checkbox" checked=bar.val}}</p>
-    </li>
-  {{/each}}
+  <ul>
+    {{#each bar in bars}}
+      <li>
+        <p>{{bar}}</p>
+        <p>isDirty: {{bar.isDirty}}</p>
+        <p>{{input type="checkbox" checked=bar.val}}</p>
+      </li>
+    {{/each}}
+  </ul>
+{{/if}}
+
+{{#if baz}}
   <h2>Baz:</h2>
   <p>{{baz}}</p>
   <p>isDirty: {{baz.isDirty}}</p>
   <p>{{input type="checkbox" checked=baz.val}}</p>
-</ul>
+{{/if}}

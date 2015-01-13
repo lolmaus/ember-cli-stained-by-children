@@ -100,6 +100,8 @@ export default Ember.Mixin.create({
   _isChildDirty: function(relationship) {
     var child = this.get(relationship.name);
 
+    if (!child) return false;
+
     if (relationship.kind === 'hasMany')
       return child.any(function(item) {
         return item.get('isDirty');
