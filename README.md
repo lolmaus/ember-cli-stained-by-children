@@ -46,6 +46,13 @@ The mixin also modifies the `isDirty` property. Originally, `isDirty` is merely 
 this.get('currentState.isDirty') || this.get('areChildrenDirty')
 ```
 
+## Warning!
+
+Circular references are **not** supported!
+
+If you define two models staining each other, your app will be unable to start.
+
+
 ## License
 
 MIT
