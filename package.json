@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-stained-by-children",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Your model's dirtiness also depends on the dirtiness of associated models.",
   "directories": {
     "doc": "doc",
@@ -15,8 +15,9 @@
   "engines": {
     "node": ">= 0.10.0"
   },
-  "author": "",
+  "author": "Andrey Mikhaylov (lolmaus) lolmaus@gmail.com",
   "license": "MIT",
+  "homepage": "https://github.com/lolmaus/ember-cli-stained-by-children/",
   "devDependencies": {
     "broccoli-asset-rev": "^2.0.0",
     "broccoli-ember-hbs-template-compiler": "^1.6.1",
