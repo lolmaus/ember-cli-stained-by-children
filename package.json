@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-stained-by-children",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Your model's dirtiness also depends on the dirtiness of associated models.",
   "directories": {
     "doc": "doc",
@@ -11,17 +11,16 @@
     "build": "ember build",
     "test": "ember test"
   },
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lolmaus/ember-cli-stained-by-children/"
+  },
   "engines": {
     "node": ">= 0.10.0"
   },
   "author": "Andrey Mikhaylov (lolmaus) lolmaus@gmail.com",
   "license": "MIT",
   "homepage": "https://github.com/lolmaus/ember-cli-stained-by-children/",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lolmaus/ember-cli-stained-by-children/"
-  },
   "bugs": {
     "url": "https://github.com/lolmaus/ember-cli-stained-by-children/issues"
   },
