@@ -44,6 +44,7 @@ The mixin also modifies the `isDirty` property. Originally, `isDirty` is merely 
 
 ```js
 this.get('currentState.isDirty') || this.get('areChildrenDirty')
+```
 
 
 ## Marking embedded children as clean when you save their parent
@@ -78,7 +79,6 @@ export default Foo;
 ```
 
 Cleaning children can be done recursively. Just user the mixin on child model as well as parent model, and saving a parent record will result in cleaning both its children and children's children.
-```
 
 
 ## Warning!
