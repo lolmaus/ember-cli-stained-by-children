@@ -30,7 +30,7 @@ export default Ember.Mixin.create({
 
 
   save: function() {
-    this
+    return this
       ._super()
       .then(
         function() {
