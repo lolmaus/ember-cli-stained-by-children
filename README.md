@@ -71,7 +71,7 @@ import CleanEmbeddedChildrenMixin from 'stained-by-children/clean-embedded-child
 
 Foo = DS.Model.extend( StainedByChildrenMixin, CleanEmbeddedChildrenMixin, {
   bars: DS.hasMany   ( 'bar',  {stains: true, embeddedChild: true} )
-  baz:  DS.belongsTo ( 'baz'                  )
+  baz:  DS.belongsTo ( 'baz'                                       )
   quux: DS.belongsTo ( 'quux', {stains: true, embeddedChild: true} )
 });
 
