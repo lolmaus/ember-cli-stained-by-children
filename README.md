@@ -12,9 +12,9 @@ You must have [Ember CLI](http://ember-cli.com) installed in your system and you
 
 ## Usage
 
-In your model:
+In your parent model:
 
-1. Import `stained-by-children/mixin`.
+1. Import `stained-by-children/stained-by-children` (path has changed in 0.3!).
 2. Extend your model with the mixin.
 3. Apply `stains: true` to the relationships whose dirtiness should affect your model's dirtiness:
 
@@ -22,7 +22,7 @@ In your model:
 // app/models/foo.js
 
 import DS from 'ember-data';
-import StainedByChildrenMixin from 'stained-by-children/mixin';
+import StainedByChildrenMixin from 'stained-by-children/stained-by-children';
 
 Foo = DS.Model.extend( StainedByChildrenMixin, {
   bars: DS.hasMany   ( 'bar',  {stains: true} )
@@ -44,18 +44,53 @@ The mixin also modifies the `isDirty` property. Originally, `isDirty` is merely 
 
 ```js
 this.get('currentState.isDirty') || this.get('areChildrenDirty')
+
+
+## Marking embedded children as clean when you save their parent
+
+`DS.EmbeddedRecordsMixin` has a [known issue](https://github.com/emberjs/data/issues/2487): when you save a parent record, embedded children remain dirty. This is a bummer, especially when you use `StainedByChildrenMixin`.
+
+You can resolve this issue with `CleanEmbeddedChildrenMixin`!
+
+
+In your parent model:
+
+1. Import `stained-by-children/clean-embedded-children`.
+2. Extend your model with the mixin.
+3. Apply `embeddedChild: true` to the relationships who should become clean when this record is saved.
+
+The example below combines both mixins:
+
+```js
+// app/models/foo.js
+
+import DS from 'ember-data';
+import StainedByChildrenMixin from 'stained-by-children/stained-by-children';
+import CleanEmbeddedChildrenMixin from 'stained-by-children/clean-embedded-children';
+
+Foo = DS.Model.extend( StainedByChildrenMixin, CleanEmbeddedChildrenMixin, {
+  bars: DS.hasMany   ( 'bar',  {stains: true, embeddedChild: true} )
+  baz:  DS.belongsTo ( 'baz'                  )
+  quux: DS.belongsTo ( 'quux', {stains: true, embeddedChild: true} )
+});
+
+export default Foo;
 ```
+
+Cleaning children can be done recursively. Just user the mixin on child model as well as parent model, and saving a parent record will result in cleaning both its children and children's children.
+```
+
 
 ## Warning!
 
 Circular references are **not** supported!
 
-If you define two models staining each other, your app will be unable to start.
+If you define two models staining/cleaning each other, your app will be unable to start.
 
 
 ## License
 
-MIT
+[MIT](https://github.com/lolmaus/ember-cli-stained-by-children/blob/0.x/LICENSE.md)
 
 
 ## Credit

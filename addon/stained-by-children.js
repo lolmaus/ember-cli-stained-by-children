@@ -82,7 +82,7 @@ export default Ember.Mixin.create({
 
     return relationships.map( function(relationship) {
       return relationship.propertyName;
-    })
+    });
   },
 
 
