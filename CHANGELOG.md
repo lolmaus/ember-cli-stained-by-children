@@ -21,6 +21,14 @@ First working version
 * :wrench: `clean-embedded-children`: the `save` method should return a promise.
 
 
+# v0.3.2
+
+**2015-02-11**
+
+* :notebook: Refactored the readme.
+* :notebook: Added warning that `stained-by-children` does not react to relationship changes.
+
+
 # Legend
 
 
@@ -28,4 +36,4 @@ First working version
 * :new: - new feature.
 * :thumbsup: - improvement.
 * :wrench: - bugfix.
-
+* :notebook: - documentation.
