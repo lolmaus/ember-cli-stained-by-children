@@ -34,25 +34,43 @@ export default Ember.Mixin.create({
       ._super()
       .then(
         function() {
-          this._cleanChildren();
+          this._processChildren(function(child) {
+            child.set('_attributes', {});
+          });
         }.bind(this)
     );
   },
 
 
-  _cleanChildren: function() {
+  rollback: function() {
+    this._processChildren(function(child) {
+      child.rollback();
+    });
+    return this._super();
+  },
+
+
+  _processChildren: function(callback) {
     this._processRelationshipsOneOrMany(function(child) {
       if ((child == null) || !child.get('isDirty')) {
         return;
       }
 
       child.send('willCommit');
-      child.set('_attributes', {});
+      callback(child);
       child.send('didCommit');
 
       if (typeof child._cleanChildren === "function") {
         child._cleanChildren();
       }
     });
+  },
+
+
+  _cleanChildren: function() {
+    this._processChildren(function(child) {
+      child.set('_attributes', {});
+    });
   }
+
 });
