@@ -31,59 +31,59 @@ var setupTestData = function(store) {
   return store;
 };
 
-test('it exists', function() {
+test('it exists', function(assert) {
   var model = this.subject();
   // var store = this.store();
-  ok(!!model);
+  assert.ok(!!model);
 });
 
-test('StainedByChildrenMixin: Changing a grandchild quux should stain parent foo', function() {
+test('StainedByChildrenMixin: Changing a grandchild quux should stain parent foo', function(assert) {
 
   Ember.run(function() {
     var store = setupTestData(this.store());
 
     var foo  = store.all('foo').findBy('id', '1');
-    var bar1 = store.all('bar').findBy('id', '1');
+    var bar  = store.all('bar').findBy('id', '1');
     var baz  = store.all('baz').findBy('id', '1');
     var quux = store.all('quux').findBy('id', '1');
 
-    ok(!foo.get('isDirty'));
+    assert.ok(!foo.get('isDirty'));
 
     quux.set('val', true);
 
-    ok(baz.get('isDirty'));
-    ok(foo.get('isDirty'));
-    ok(!bar1.get('isDirty'));
+    assert.ok(baz.get('isDirty'), 'baz should become dirty');
+    assert.ok(foo.get('isDirty'), 'foo should become dirty');
+    assert.ok(!bar.get('isDirty', 'bar should not become dirty'));
 
   }.bind(this));
 });
 
 
-test('CleanEmbeddedChildrenMixin: Triggering _commitChildren on parent should clean children', function() {
+test('CleanEmbeddedChildrenMixin: Triggering _commitChildren on parent should clean children', function(assert) {
 
   Ember.run(function() {
     var store = setupTestData(this.store());
 
     var foo  = store.all('foo').findBy('id', '1');
-    var bar1 = store.all('bar').findBy('id', '1');
+    var bar  = store.all('bar').findBy('id', '1');
     var baz  = store.all('baz').findBy('id', '1');
     var quux = store.all('quux').findBy('id', '1');
 
-    bar1.set('val', true);
+    bar.set('val', true);
     baz.set('val', true);
     quux.set('val', true);
 
     foo._cleanChildren();
 
-    ok(!bar1.get('isDirty'));
-    ok(!baz.get('isDirty'));
-    ok(!quux.get('isDirty'));
+    assert.ok(!bar.get('isDirty'),  'bar should not become dirty');
+    assert.ok(!baz.get('isDirty'),  'baz should not become dirty');
+    assert.ok(!quux.get('isDirty'), 'quux should not become dirty');
 
   }.bind(this));
 });
 
 
-test('CleanEmbeddedChildrenMixin: Should not crash on empty relationships', function() {
+test('CleanEmbeddedChildrenMixin: Should not crash on empty relationships', function(assert) {
 
   Ember.run(function() {
     var store = this.store();
@@ -93,14 +93,14 @@ test('CleanEmbeddedChildrenMixin: Should not crash on empty relationships', func
 
     foo._cleanChildren();
 
-    ok(true, 'Should not error out');
+    assert.ok(true, 'Should not error out');
 
   }.bind(this));
 });
 
-test("CleanEmbeddedChildrenMixin: call save() on root record should process childs 'isDirty' state", function() {
+test("CleanEmbeddedChildrenMixin: call save() on root record should process childs 'isDirty' state", function(assert) {
 
-  stop();
+  var done = assert.async();
   Ember.run(function() {
 
     var store = setupTestData(this.store());
@@ -109,34 +109,33 @@ test("CleanEmbeddedChildrenMixin: call save() on root record should process chil
     var bar1 = store.all('bar').findBy('id', '1');
     var bar2 = store.all('bar').findBy('id', '2');
 
-    ok(!foo.get('isDirty'), 'foo isn\'t dirty');
-    ok(!bar1.get('isDirty'), 'bar1 isn\'t dirty');
-    ok(!bar2.get('isDirty'), 'bar2 isn\'t dirty');
+    assert.ok(!foo.get('isDirty'), 'foo isn\'t dirty');
+    assert.ok(!bar1.get('isDirty'), 'bar1 isn\'t dirty');
+    assert.ok(!bar2.get('isDirty'), 'bar2 isn\'t dirty');
 
-    ok(!bar2.get('val'), 'bar2 default value of `val` is `false`');
+    assert.ok(!bar2.get('val'), 'bar2 default value of `val` is `false`');
     bar2.set('val', true);
-    ok(bar2.get('val'), 'set bar2 value of `val` to `true`');
+    assert.ok(bar2.get('val'), 'set bar2 value of `val` to `true`');
 
-    ok(foo.get('isDirty'), 'foo is dirty');
-    ok(!bar1.get('isDirty'), 'bar1 isn\'t dirty');
-    ok(bar2.get('isDirty'), 'bar2 is dirty');
+    assert.ok(foo.get('isDirty'), 'foo is dirty');
+    assert.ok(!bar1.get('isDirty'), 'bar1 isn\'t dirty');
+    assert.ok(bar2.get('isDirty'), 'bar2 is dirty');
 
     foo.save().then(function() {
+      assert.ok(!foo.get('isDirty'), 'foo isn\'t dirty after foo.save()');
+      assert.ok(!bar1.get('isDirty'), 'bar1 isn\'t dirty after foo.save()');
+      assert.ok(!bar2.get('isDirty'), 'bar2 isn\'t dirty after foo.save()');
 
-      start();
-      ok(!foo.get('isDirty'), 'foo isn\'t dirty after foo.save()');
-      ok(!bar1.get('isDirty'), 'bar1 isn\'t dirty after foo.save()');
-      ok(!bar2.get('isDirty'), 'bar2 isn\'t dirty after foo.save()');
+      assert.ok(bar2.get('val'), 'bar2 value of `val` is persisted to `true` after foo.save()');
 
-      ok(bar2.get('val'), 'bar2 value of `val` is persisted to `true` after foo.save()');
-
+      done();
     });
 
   }.bind(this));
 
 });
 
-test('CleanEmbeddedChildrenMixin: call rollback() on root record should rollback all dirty childs', function() {
+test('CleanEmbeddedChildrenMixin: call rollback() on root record should rollback all dirty childs', function(assert) {
 
   Ember.run(function() {
 
@@ -147,28 +146,28 @@ test('CleanEmbeddedChildrenMixin: call rollback() on root record should rollback
     var baz = store.all('baz').findBy('id', '1');
     var quux = store.all('quux').findBy('id', '1');
 
-    ok(!foo.get('isDirty'), 'foo isn\'t dirty');
-    ok(!bar.get('isDirty'), 'bar isn\'t dirty');
-    ok(!baz.get('isDirty'), 'baz isn\'t dirty');
-    ok(!quux.get('isDirty'), 'quux isn\'t dirty');
+    assert.ok(!foo.get('isDirty'), 'foo isn\'t dirty');
+    assert.ok(!bar.get('isDirty'), 'bar isn\'t dirty');
+    assert.ok(!baz.get('isDirty'), 'baz isn\'t dirty');
+    assert.ok(!quux.get('isDirty'), 'quux isn\'t dirty');
 
-    ok(!quux.get('val'), 'quux default value of `val` is `false`');
+    assert.ok(!quux.get('val'), 'quux default value of `val` is `false`');
     quux.set('val', true);
-    ok(quux.get('val'), 'set quux value of `val` to `true`');
+    assert.ok(quux.get('val'), 'set quux value of `val` to `true`');
 
-    ok(foo.get('isDirty'), 'foo is dirty');
-    ok(!bar.get('isDirty'), 'bar isn\'t dirty');
-    ok(baz.get('isDirty'), 'baz is dirty');
-    ok(quux.get('isDirty'), 'quux is dirty');
+    assert.ok(foo.get('isDirty'), 'foo is dirty');
+    assert.ok(!bar.get('isDirty'), 'bar isn\'t dirty');
+    assert.ok(baz.get('isDirty'), 'baz is dirty');
+    assert.ok(quux.get('isDirty'), 'quux is dirty');
 
     foo.rollback();
 
-    ok(!foo.get('isDirty'), 'foo isn\'t dirty after foo.rollback()');
-    ok(!bar.get('isDirty'), 'bar isn\'t dirty after foo.rollback()');
-    ok(!baz.get('isDirty'), 'baz isn\'t dirty after foo.rollback()');
-    ok(!quux.get('isDirty'), 'quux isn\'t dirty after foo.rollback()');
+    assert.ok(!foo.get('isDirty'), 'foo isn\'t dirty after foo.rollback()');
+    assert.ok(!bar.get('isDirty'), 'bar isn\'t dirty after foo.rollback()');
+    assert.ok(!baz.get('isDirty'), 'baz isn\'t dirty after foo.rollback()');
+    assert.ok(!quux.get('isDirty'), 'quux isn\'t dirty after foo.rollback()');
 
-    ok(!quux.get('val'), 'quux value of `val` is rollbacked to `false`');
+    assert.ok(!quux.get('val'), 'quux value of `val` is rollbacked to `false`');
 
   }.bind(this));
 

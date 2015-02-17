@@ -41,7 +41,9 @@ export default Ember.Mixin.create({
     var relationships = [];
 
     this.eachRelationship(function(relationshipName, relationship) {
-      if (relationship.options.stains !== true) return;
+      if (relationship.options.stains !== true) {
+        return;
+      }
 
       var newRelationship = {
         name:         relationshipName,
@@ -57,10 +59,11 @@ export default Ember.Mixin.create({
 
   _propertyNameForRelationship: function(relationshipName, relationship) {
     var propertyName = relationshipName;
-    if (relationship.kind === 'hasMany')
+    if (relationship.kind === 'hasMany') {
       propertyName += ".@each.isDirty";
-    else
+    } else {
       propertyName += ".isDirty";
+    }
     return propertyName;
   },
 
@@ -77,8 +80,9 @@ export default Ember.Mixin.create({
   //
   //
   _dirtyChildrenPropertyNames: function(relationships) {
-    if (!relationships)
+    if (!relationships) {
       relationships = this._stainingRelationships();
+    }
 
     return relationships.map( function(relationship) {
       return relationship.propertyName;
@@ -100,14 +104,15 @@ export default Ember.Mixin.create({
   _isChildDirty: function(relationship) {
     var child = this.get(relationship.name);
 
-    if (!child) return false;
+    if (!child) { return false; }
 
-    if (relationship.kind === 'hasMany')
-      return child.any(function(item) {
+    if (relationship.kind === 'hasMany') {
+      return child.any(function (item) {
         return item.get('isDirty');
       });
 
-    else
+    } else {
       return child.get('isDirty');
+    }
   }
 });
