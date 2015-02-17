@@ -98,7 +98,7 @@ test('CleanEmbeddedChildrenMixin: Should not crash on empty relationships', func
   }.bind(this));
 });
 
-test("call save() on root record should process childs 'isDirty' state", function() {
+test("CleanEmbeddedChildrenMixin: call save() on root record should process childs 'isDirty' state", function() {
 
   stop();
   Ember.run(function() {
@@ -109,22 +109,26 @@ test("call save() on root record should process childs 'isDirty' state", functio
     var bar1 = store.all('bar').findBy('id', '1');
     var bar2 = store.all('bar').findBy('id', '2');
 
-    ok(!foo.get('isDirty'));
-    ok(!bar1.get('isDirty'));
-    ok(!bar2.get('isDirty'));
+    ok(!foo.get('isDirty'), 'foo isn\'t dirty');
+    ok(!bar1.get('isDirty'), 'bar1 isn\'t dirty');
+    ok(!bar2.get('isDirty'), 'bar2 isn\'t dirty');
 
+    ok(!bar2.get('val'), 'bar2 default value of `val` is `false`');
     bar2.set('val', true);
+    ok(bar2.get('val'), 'set bar2 value of `val` to `true`');
 
-    ok(foo.get('isDirty'));
-    ok(!bar1.get('isDirty'));
-    ok(bar2.get('isDirty'));
+    ok(foo.get('isDirty'), 'foo is dirty');
+    ok(!bar1.get('isDirty'), 'bar1 isn\'t dirty');
+    ok(bar2.get('isDirty'), 'bar2 is dirty');
 
     foo.save().then(function() {
 
       start();
-      ok(!foo.get('isDirty'));
-      ok(!bar1.get('isDirty'));
-      ok(!bar2.get('isDirty'));
+      ok(!foo.get('isDirty'), 'foo isn\'t dirty after foo.save()');
+      ok(!bar1.get('isDirty'), 'bar1 isn\'t dirty after foo.save()');
+      ok(!bar2.get('isDirty'), 'bar2 isn\'t dirty after foo.save()');
+
+      ok(bar2.get('val'), 'bar2 value of `val` is persisted to `true` after foo.save()');
 
     });
 
@@ -132,7 +136,7 @@ test("call save() on root record should process childs 'isDirty' state", functio
 
 });
 
-test('call rollback() on root record should rollback all dirty childs', function() {
+test('CleanEmbeddedChildrenMixin: call rollback() on root record should rollback all dirty childs', function() {
 
   Ember.run(function() {
 
@@ -143,28 +147,28 @@ test('call rollback() on root record should rollback all dirty childs', function
     var baz = store.all('baz').findBy('id', '1');
     var quux = store.all('quux').findBy('id', '1');
 
-    ok(!foo.get('isDirty'));
-    ok(!bar.get('isDirty'));
-    ok(!baz.get('isDirty'));
-    ok(!quux.get('isDirty'));
+    ok(!foo.get('isDirty'), 'foo isn\'t dirty');
+    ok(!bar.get('isDirty'), 'bar isn\'t dirty');
+    ok(!baz.get('isDirty'), 'baz isn\'t dirty');
+    ok(!quux.get('isDirty'), 'quux isn\'t dirty');
 
-    strictEqual(quux.get('str'), 'quux');
-    quux.set('str', 'foo');
-    strictEqual(quux.get('str'), 'foo');
+    ok(!quux.get('val'), 'quux default value of `val` is `false`');
+    quux.set('val', true);
+    ok(quux.get('val'), 'set quux value of `val` to `true`');
 
-    ok(foo.get('isDirty'));
-    ok(!bar.get('isDirty'));
-    ok(baz.get('isDirty'));
-    ok(quux.get('isDirty'));
+    ok(foo.get('isDirty'), 'foo is dirty');
+    ok(!bar.get('isDirty'), 'bar isn\'t dirty');
+    ok(baz.get('isDirty'), 'baz is dirty');
+    ok(quux.get('isDirty'), 'quux is dirty');
 
     foo.rollback();
 
-    ok(!foo.get('isDirty'));
-    ok(!bar.get('isDirty'));
-    ok(!baz.get('isDirty'));
-    ok(!quux.get('isDirty'));
+    ok(!foo.get('isDirty'), 'foo isn\'t dirty after foo.rollback()');
+    ok(!bar.get('isDirty'), 'bar isn\'t dirty after foo.rollback()');
+    ok(!baz.get('isDirty'), 'baz isn\'t dirty after foo.rollback()');
+    ok(!quux.get('isDirty'), 'quux isn\'t dirty after foo.rollback()');
 
-    strictEqual(quux.get('str'), 'quux');
+    ok(!quux.get('val'), 'quux value of `val` is rollbacked to `false`');
 
   }.bind(this));
 
