@@ -1,5 +1,5 @@
-[![NPM package](https://img.shields.io/travis/lolmaus/ember-cli-stained-by-children.svg)](https://travis-ci.org/lolmaus/ember-cli-stained-by-children)
-[![Build Status](https://img.shields.io/npm/v/ember-cli-stained-by-children.svg)](https://www.npmjs.com/package/ember-cli-stained-by-children)
+[![NPM package](https://img.shields.io/npm/v/ember-cli-stained-by-children.svg)](https://www.npmjs.com/package/ember-cli-stained-by-children)
+[![Build Status](https://img.shields.io/travis/lolmaus/ember-cli-stained-by-children.svg)](https://travis-ci.org/lolmaus/ember-cli-stained-by-children)
 
 This addon grew into a collection of mixins. The addon is named after the first of those mixins. Thus, the name doesn't reflect the capabilities of the addon very well, but i decided not to change it. -- [@lolmaus](https://github.com/lolmaus)
 
