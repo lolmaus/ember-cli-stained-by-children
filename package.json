@@ -1,6 +1,6 @@
 {
   "name": "ember-cli-stained-by-children",
-  "version": "0.4.0",
+  "version": "v0.4.0-ember1.12.0-support",
   "description": "The default blueprint for ember-cli addons.",
   "directories": {
     "doc": "doc",
@@ -11,7 +11,7 @@
     "build": "ember build",
     "test": "ember test"
   },
-  "repository": "",
+  "repository": "git://github.com/jmurphyau/ember-cli-stained-by-children.git#v0.4.0-ember1.12.0-support",
   "engines": {
     "node": ">= 0.10.0"
   },
