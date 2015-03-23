@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Mixin.create({
 
-  isDirty: Ember.computed('areChildrenDirty', 'currentState.isDirty', function() {
+  isFilthy: Ember.computed('areChildrenDirty', 'currentState.isDirty', function() {
     return this.get('currentState.isDirty') || this.get('areChildrenDirty');
   }),
 
