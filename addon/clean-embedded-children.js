@@ -28,6 +28,14 @@ export default Ember.Mixin.create({
     );
   },
 
+  _clearChildAttributes: function(child) {
+    if(child.get('_internalModel')) {
+      // Ember Data 1.0.0-beta.19.2 uses _internalModel
+      child.set('_internalModel._attributes', {});
+    } else {
+      child.set('_attributes', {});
+    }
+  },
 
   save: function() {
     return this
@@ -35,8 +43,8 @@ export default Ember.Mixin.create({
       .then(
         function() {
           this._processChildren(function(child) {
-            child.set('_attributes', {});
-          });
+            this._clearChildAttributes(child);
+          }.bind(this));
         }.bind(this)
     );
   },
@@ -69,8 +77,8 @@ export default Ember.Mixin.create({
 
   _cleanChildren: function() {
     this._processChildren(function(child) {
-      child.set('_attributes', {});
-    });
+      this._clearChildAttributes(child);
+    }.bind(this));
   }
 
 });
