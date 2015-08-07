@@ -172,3 +172,78 @@ test('CleanEmbeddedChildrenMixin: call rollback() on root record should rollback
   }.bind(this));
 
 });
+
+test('CleanEmbeddedChildrenMixin: call reload() on root record should rollback all dirty childs', function(assert) {
+
+  var done = assert.async();
+  Ember.run(function() {
+
+    var store = setupTestData(this.store());
+
+    var foo = store.all('foo').findBy('id', '1');
+    var bar = store.all('bar').findBy('id', '1');
+    var baz = store.all('baz').findBy('id', '1');
+    var quux = store.all('quux').findBy('id', '1');
+
+    assert.ok(!foo.get('isDirty'), 'foo isn\'t dirty');
+    assert.ok(!bar.get('isDirty'), 'bar isn\'t dirty');
+    assert.ok(!baz.get('isDirty'), 'baz isn\'t dirty');
+    assert.ok(!quux.get('isDirty'), 'quux isn\'t dirty');
+
+    assert.ok(!quux.get('val'), 'quux default value of `val` is `false`');
+    quux.set('val', true);
+    assert.ok(quux.get('val'), 'set quux value of `val` to `true`');
+
+    assert.ok(foo.get('isDirty'), 'foo is dirty');
+    assert.ok(!bar.get('isDirty'), 'bar isn\'t dirty');
+    assert.ok(baz.get('isDirty'), 'baz is dirty');
+    assert.ok(quux.get('isDirty'), 'quux is dirty');
+
+    foo.reload().then(function() {
+      assert.ok(!foo.get('isDirty'), 'foo isn\'t dirty after foo.reload()');
+      assert.ok(!bar.get('isDirty'), 'bar isn\'t dirty after foo.reload()');
+      assert.ok(!baz.get('isDirty'), 'baz isn\'t dirty after foo.reload()');
+      assert.ok(!quux.get('isDirty'), 'quux isn\'t dirty after foo.reload()');
+
+      assert.ok(!quux.get('val'), 'quux value of `val` is rollbacked to `false`');
+      done();
+    });
+
+  }.bind(this));
+
+});
+
+test("CleanEmbeddedChildrenMixin: call reload() on root record should process childs 'isDirty' state", function(assert) {
+
+  var done = assert.async();
+  Ember.run(function() {
+
+    var store = setupTestData(this.store());
+
+    var foo = store.all('foo').findBy('id', '1');
+    var bar1 = store.all('bar').findBy('id', '1');
+    var bar2 = store.all('bar').findBy('id', '2');
+
+    assert.ok(!foo.get('isDirty'), 'foo isn\'t dirty');
+    assert.ok(!bar1.get('isDirty'), 'bar1 isn\'t dirty');
+    assert.ok(!bar2.get('isDirty'), 'bar2 isn\'t dirty');
+
+    assert.ok(!bar2.get('val'), 'bar2 default value of `val` is `false`');
+    bar2.set('val', true);
+    assert.ok(bar2.get('val'), 'set bar2 value of `val` to `true`');
+
+    assert.ok(foo.get('isDirty'), 'foo is dirty');
+    assert.ok(!bar1.get('isDirty'), 'bar1 isn\'t dirty');
+    assert.ok(bar2.get('isDirty'), 'bar2 is dirty');
+
+    foo.reload().then(function() {
+      assert.ok(!foo.get('isDirty'), 'foo isn\'t dirty after foo.reload()');
+      assert.ok(!bar1.get('isDirty'), 'bar1 isn\'t dirty after foo.reload()');
+      assert.ok(!bar2.get('isDirty'), 'bar2 isn\'t dirty after foo.reload()');
+
+      done();
+    });
+
+  }.bind(this));
+
+});
