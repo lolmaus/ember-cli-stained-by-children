@@ -35,7 +35,7 @@ export default Ember.Mixin.create({
       .then(
         function() {
           this._processChildren(function(child) {
-            child.set('_attributes', {});
+            child.set('_internalModel._attributes', {});
           });
         }.bind(this)
     );
@@ -52,7 +52,7 @@ export default Ember.Mixin.create({
 
   _processChildren: function(callback) {
     this._processRelationshipsOneOrMany(function(child) {
-      if ((child == null) || !child.get('isDirty')) {
+      if ((child == null) || !child.get('hasDirtyAttributes')) {
         return;
       }
 
@@ -69,7 +69,7 @@ export default Ember.Mixin.create({
 
   _cleanChildren: function() {
     this._processChildren(function(child) {
-      child.set('_attributes', {});
+      child.set('_internalModel._attributes', {});
     });
   }
 

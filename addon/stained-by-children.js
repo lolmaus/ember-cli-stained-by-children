@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Mixin.create({
 
-  isDirty: Ember.computed('areChildrenDirty', 'currentState.isDirty', function() {
+  hasDirtyAttributes: Ember.computed('areChildrenDirty', 'currentState.isDirty', function() {
     return this.get('currentState.isDirty') || this.get('areChildrenDirty');
   }),
 
@@ -60,9 +60,9 @@ export default Ember.Mixin.create({
   _propertyNameForRelationship: function(relationshipName, relationship) {
     var propertyName = relationshipName;
     if (relationship.kind === 'hasMany') {
-      propertyName += ".@each.isDirty";
+      propertyName += ".@each.hasDirtyAttributes";
     } else {
-      propertyName += ".isDirty";
+      propertyName += ".hasDirtyAttributes";
     }
     return propertyName;
   },
@@ -108,11 +108,11 @@ export default Ember.Mixin.create({
 
     if (relationship.kind === 'hasMany') {
       return child.any(function (item) {
-        return item.get('isDirty');
+        return item.get('hasDirtyAttributes');
       });
 
     } else {
-      return child.get('isDirty');
+      return child.get('hasDirtyAttributes');
     }
   }
 });
