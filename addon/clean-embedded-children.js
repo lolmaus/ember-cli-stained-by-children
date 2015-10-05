@@ -41,6 +41,17 @@ export default Ember.Mixin.create({
     );
   },
 
+  reload: function() {
+    return this
+      ._super()
+      .then(
+        function() {
+          this._processChildren(function(child) {
+            child.rollback();
+          });
+        }.bind(this)
+    );
+  },
 
   rollback: function() {
     this._processChildren(function(child) {
