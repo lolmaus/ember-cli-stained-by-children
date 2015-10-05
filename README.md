@@ -4,6 +4,20 @@
 This addon grew into a collection of mixins. The addon is named after the first of those mixins. Thus, the name doesn't reflect the capabilities of the addon very well, but i decided not to change it. -- [@lolmaus](https://github.com/lolmaus)
 
 
+# OBSOLETE
+
+This addon only works with Ember Data v1.0.0-beta.18 and below. 
+
+I gave up on its development due to a problem I couldn't resolve.
+
+Unlike attributes, a relationship in Ember Data is always initialized empty, and then it gets populated. Even if a relationship appears prefilled with a payload, there will still be a brief moment when the relationship is empty. This defeats the possibility to use observers/CPs on the relationship.
+
+If someone tells me how to distinguish a prefilled relationship from both an empty relationship or a relationship that was originally empty and was later filled, then I'll release an up to date version of this addon.
+
+If you know a solution, please report in [this issue](https://github.com/lolmaus/ember-cli-stained-by-children/issues/2).
+
+
+
 
 # Installation
 
