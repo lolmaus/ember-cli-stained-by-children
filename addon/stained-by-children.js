@@ -2,6 +2,7 @@ import Ember from 'ember';
 import DS    from 'ember-data';
 
 const {
+  A,
   computed,
   on,
   defineProperty,
@@ -43,6 +44,7 @@ export default Ember.Mixin.create({
       'currentState.isDirty',
       ...relatedKeysHasDirty,
       function() {
+
         if (this.get('currentState.isDirty')) {
           return;
         }
@@ -50,9 +52,17 @@ export default Ember.Mixin.create({
         const relatedModels = Ember.A(relatedKeys.map(k => this.get(k)));
         return relatedModels.any((related) => {
           if (related instanceof ManyArray) {
-            return related.isAny('hasDirtyAttributes', true);
+            return related.isAny('hasDirtyAttributes', true)
+              || (
+                related.canonicalState.length !== related.currentState.length
+                && A(related.canonicalState).any((e, i) => {
+                  return e === related.currentState[i];
+                })
+              );
+
           }
           return related.get('hasDirtyAttributes');
+
         });
       }
     ]));

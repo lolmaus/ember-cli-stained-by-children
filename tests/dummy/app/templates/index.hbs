@@ -13,6 +13,13 @@
             <p>Child name: {{c.name}} {{input value=c.name}}</p>
             <p>Child isStained: {{c.isStained}}</p>
             <p>Child hasDirtyAttributes: {{c.hasDirtyAttributes}}</p>
+            <p>
+              <button
+                {{action 'removeChild' p c}}
+              >
+                Remove
+              </button>
+            </p>
           </li>
         {{/each}}
       </ul>
