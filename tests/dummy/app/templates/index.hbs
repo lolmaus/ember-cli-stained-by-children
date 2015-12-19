@@ -16,6 +16,23 @@
           </li>
         {{/each}}
       </ul>
+      <p>
+        Parent dog:
+        <select onchange={{action "changeDog" p}}>
+          {{#each model.dogs as |dogChoice|}}
+            <option
+              value={{dogChoice.id}}
+              selected={{eq p.dog.id dogChoice.id}}
+            >
+              {{dogChoice.id}} {{dogChoice.name}}
+            </option>
+          {{/each}}
+        </select>
+      </p>
+      <div>
+        <p>Dog id:   {{p.dog.id}}</p>
+        <p>Dog name: {{p.dog.name}} {{input value=p.dog.name}}</p>
+      </div>
     </li>
   {{/each}}
 </ul>

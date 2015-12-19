@@ -33,6 +33,9 @@ export default Ember.Route.extend({
               {id: '1', type: 'children'},
               {id: '2', type: 'children'}
             ]
+          },
+          dog: {
+            data: {id: '1', type: 'dogs'}
           }
         }
       },
@@ -60,13 +63,27 @@ export default Ember.Route.extend({
               data: {id: '2', type: 'parents'}
             }
           }
+        },
+        {
+          id: '1',
+          type: 'dogs',
+          attributes: {
+            name: 'Foo dog'
+          }
+        },
+        {
+          id: '2',
+          type: 'dogs',
+          attributes: {
+            name: 'Bar dog'
+          }
         }
       ]
     });
 
     return Ember.RSVP.hash({
       parents:  this.store.peekAll('parent'),
-      children: this.store.peekAll('child')
+      dogs:     this.store.peekAll('dog')
     });
   }
 });

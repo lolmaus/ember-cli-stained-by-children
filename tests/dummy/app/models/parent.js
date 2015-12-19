@@ -3,11 +3,13 @@ import StainedMixin from 'ember-cli-stained-by-children/stained-by-children';
 
 const {
   attr,
+  belongsTo,
   hasMany,
   Model
 } = DS;
 
 export default Model.extend(StainedMixin, {
   name:     attr('string'),
-  children: hasMany('child', {stains: true, async: false})
+  children: hasMany('child', {stains: true, async: false}),
+  dog:      belongsTo('dog', {stains: true, async: false})
 });
