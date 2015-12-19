@@ -2,7 +2,6 @@ import Ember from 'ember';
 import DS    from 'ember-data';
 
 const {
-  A,
   computed,
   on,
   defineProperty,
@@ -55,7 +54,7 @@ export default Ember.Mixin.create({
             return related.isAny('hasDirtyAttributes', true)
               || (
                 related.canonicalState.length !== related.currentState.length
-                && A(related.canonicalState).any((e, i) => {
+                && Ember.A(related.canonicalState).any((e, i) => {
                   return e === related.currentState[i];
                 })
               );
