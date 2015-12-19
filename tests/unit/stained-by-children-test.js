@@ -42,11 +42,11 @@ test('dirty child stains parent', function(assert) {
   const child  = store.peekRecord('child', '1');
   const parent = store.peekRecord('parent', '1');
 
-  assert.notOk(parent.get('isStained'));
+  assert.notOk(parent.get('hasDirtyAttributes'));
 
   run(() => {
     child.set('name', 'foo');
   });
 
-  assert.ok(parent.get('isStained'));
+  assert.ok(parent.get('hasDirtyAttributes'));
 });
