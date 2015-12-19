@@ -61,7 +61,8 @@ export default Ember.Mixin.create({
               );
 
           }
-          return related.get('hasDirtyAttributes');
+
+          return !!related && related.get('hasDirtyAttributes');
 
         });
       }

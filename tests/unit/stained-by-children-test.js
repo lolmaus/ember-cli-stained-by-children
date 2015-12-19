@@ -5,7 +5,10 @@ const { run } = Ember;
 
 moduleForModel('parent', 'Unit | Mixin | stained-by-children', {
   // Specify the other units that are required for this test.
-  needs: ['model:child']
+  needs: [
+    'model:child',
+    'model:dog'
+  ]
 });
 
 test('dirty child stains parent', function(assert) {
@@ -33,6 +36,20 @@ test('dirty child stains parent', function(assert) {
             parent: {
               data: {id: '1', type: 'parents'}
             }
+          }
+        },
+        {
+          id: '1',
+          type: 'dogs',
+          attributes: {
+            name: 'Foo dog'
+          }
+        },
+        {
+          id: '2',
+          type: 'dogs',
+          attributes: {
+            name: 'Bar dog'
           }
         }
       ]
